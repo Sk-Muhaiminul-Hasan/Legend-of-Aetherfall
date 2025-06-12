@@ -1,0 +1,57 @@
+Mage
+• Health: 80
+• Power: 100
+• Standard Attack Damage: 20
+• Standard Attack power cost: 10
+• Special Move: castSpell()
+• Power Cost (Special): 30
+• Special Effect: Deals 40 health damage to opponent
+
+Archer
+• Health: 100
+• Power: 100
+• Standard Attack Damage: 15
+• Standard Attack power cost: 8
+• Special Move: quickShot()
+– Power Cost (Special): 25
+– Special Effect: Deals 30 health damage to opponent
+• Special Move: multiShot()
+– Power Cost (Special): 50
+– Special Effect: Deals 60 health damage to opponent
+
+Warrior
+• Health: 120
+• Power: 100
+• Standard Attack Damage: 12
+• Standard Attack power cost: 5
+• Special Move: mightyStrike()
+• Power Cost (Special): 35
+• Special Effect: Deals 35 health damage to opponent
+
+Dark Overlord
+• Health: 200
+• Power: 150
+• Standard Attack Damage: 25
+• Standard Attack Power Cost: 17
+• Special Move: summonDarkness()
+• Power Cost (Special): 40
+• Special Effect: Deals 50 health damage to opponent and will weaken the affect of the
+    next attack by half
+
+Regional Warlord
+• Health: 130
+• Power: 110
+• Standard Attack Damage: 20
+• Standard Attack power cost: 10
+• Special Move: toxicAura()
+• Power Cost (Special): 35
+• Special Effect: Deals 30 health damage and next 20 seconds the user cannot attack.
+
+Corrupted Mortal
+• Health: 90
+• Power: 90
+• Standard Attack Damage: 18
+• Standard Attack power cost: 9
+• Special Move: curse()
+• Power Cost (Special): 20
+• Special Effect: Deals 25 health damag
