@@ -1,21 +1,39 @@
 public class Warrior extends Protagonist {
 
     public Warrior() {
-        this.health = 120;
-        this.power = 100;
-        this.stdAttackDamage = 12;
-        this.stdAttackPowerCost = 5;
-        this.specialCost = 35;
+        this.setHealth(120);
+        this.setPower(100);
+        this.setStdAttackDamage(12);
+        this.setStdAttackPowerCost(5);
+        this.setSpecialCost(35);
+        this.setSpecialDamage(35);
     }
 
-    public String mightyStrike(Character target, int damage) {
-
-        if (this.power >= this.specialCost) {
-            this.power -= this.specialCost;
-            target.setHealth(target.getHealth() - damage);
-            return this.name + " used mighty strike successfully!";
+    @Override
+    public String specialAttack(Character target) {
+        if (this.getPower() >= this.getSpecialCost()) {
+            this.setPower(this.getPower() - this.getSpecialCost());
+            target.setHealth(target.getHealth() - this.getSpecialDamage());
+            return this.getName() + " used mighty strike successfully, dealing " + this.getSpecialDamage() + " damage!";
         } else {
-            return this.name + " not enough power to use the mighty strike.";
+            return this.getName() + " not enough power to use the mighty strike.";
         }
     }
+
+    @Override
+    public String attack(Character target) {
+        if (this.getPower() >= this.getStdAttackPowerCost()) {
+            this.setPower(this.getPower() - this.getStdAttackPowerCost());
+            target.setHealth(target.getHealth() - this.getStdAttackDamage());
+            return "";
+        } else {
+            return this.getName() + " does not have enough power to attack!";
+        }
+    }
+
+    public boolean warriorsShield(Character target) {
+        return this.getHealth() > target.getHealth();
+    }
+
+    
 }

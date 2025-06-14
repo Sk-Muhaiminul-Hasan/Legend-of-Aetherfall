@@ -2,19 +2,21 @@ public class RegionalWarlord extends Character {
     private boolean opponentStunned = false;
 
     public RegionalWarlord() {
-        this.health = 130;
-        this.power = 110;
-        this.stdAttackDamage = 20;
-        this.stdAttackPowerCost = 10;
-        this.specialCost = 35;
+        this.setHealth(130);
+        this.setPower(110);
+        this.setStdAttackDamage(20);
+        this.setStdAttackPowerCost(10);
+        this.setSpecialCost(35);
+        this.setSpecialDamage(30); 
     }
     
-    public String warlordStrike(Character target) {
-        if (this.power >= this.specialCost) {
-            this.power -= this.specialCost;
-            target.setHealth(target.getHealth() - 30);
+    @Override
+    public String specialAttack(Character target) {
+        if (this.getPower() >= this.getSpecialCost()) {
+            this.setPower(this.getPower() - this.getSpecialCost());
+            target.setHealth(target.getHealth() - this.getSpecialDamage());
             opponentStunned = true;
-            return this.getClass().getSimpleName() + " performs a powerful warlord strike, dealing 30 damage and stunning the opponent!";
+            return this.getClass().getSimpleName() + " performs a warlord strike, dealing " + this.getSpecialDamage() + " damage and stunning the opponent!";
         } else {
             return this.getClass().getSimpleName() + " does not have enough power for a warlord strike.";
         }
@@ -30,8 +32,12 @@ public class RegionalWarlord extends Character {
 
     @Override
     public String attack(Character target) {
-        target.setHealth(target.getHealth() - this.stdAttackDamage);
-        this.power -= this.stdAttackPowerCost;
-        return this.name + " attacks for " + this.stdAttackDamage + " damage!";
+        if (this.getPower() < this.getStdAttackPowerCost()) {
+            return this.getClass().getSimpleName() + " does not have enough power to attack!";
+        } else {
+            target.setHealth(target.getHealth() - this.getStdAttackDamage());
+            this.setPower(this.getPower() - this.getStdAttackPowerCost());
+            return "";
+        }
     }
 }

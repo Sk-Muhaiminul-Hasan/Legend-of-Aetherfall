@@ -1,32 +1,31 @@
-
-
-
-
 public class CorruptedMortal extends Character {
 
     public CorruptedMortal() {
-        this.health = 90;
-        this.power = 90;
-        this.stdAttackDamage = 18;
-        this.stdAttackPowerCost = 9;
-        this.specialCost = 20;
+        this.setHealth(90);
+        this.setPower(90);
+        this.setStdAttackDamage(18);
+        this.setStdAttackPowerCost(9);
+        this.setSpecialCost(20);
+        this.setSpecialDamage(25);
     }
 
-    public String corruptStrike(Character target) {
-        if (this.power >= this.specialCost) {
-            this.power -= this.specialCost;
-            target.setHealth(target.getHealth() - 25);
-            return this.getClass().getSimpleName() + " performs a corrupting strike!";
+    @Override
+    public String specialAttack(Character target) {
+        if (this.getPower() >= this.getSpecialCost()) {
+            this.setPower(this.getPower() - this.getSpecialCost());
+            target.setHealth(target.getHealth() - this.getSpecialDamage());
+            return this.getClass().getSimpleName() + " performs a corrupting strike, dealing " + this.getSpecialDamage() + " damage!";
         } else {
             return this.getClass().getSimpleName() + " does not have enough power for a corrupting strike.";
         }
     }
 
+    @Override
     public String attack(Character target) {
-        if (this.power >= this.stdAttackPowerCost) {
-            this.power -= this.stdAttackPowerCost;
-            target.setHealth(target.getHealth() - this.stdAttackDamage);
-            return this.getClass().getSimpleName() + " attacks for " + this.stdAttackDamage + " damage!";
+        if (this.getPower() >= this.getStdAttackPowerCost()) {
+            this.setPower(this.getPower() - this.getStdAttackPowerCost());
+            target.setHealth(target.getHealth() - this.getStdAttackDamage());
+            return "";
         } else {
             return this.getClass().getSimpleName() + " does not have enough power to attack!";
         }

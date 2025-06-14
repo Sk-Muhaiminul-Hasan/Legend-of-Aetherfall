@@ -1,21 +1,33 @@
-
 public class Mage extends Protagonist {
     
     public Mage() {
-        this.health = 80;
-        this.power = 100;
-        this.stdAttackDamage = 20;
-        this.stdAttackPowerCost = 10;
-        this.specialCost = 30;
+        this.setHealth(80);
+        this.setPower(100);
+        this.setStdAttackDamage(20);
+        this.setStdAttackPowerCost(10);
+        this.setSpecialCost(30);
+        this.setSpecialDamage(40); 
     }
 
-    public String castSpell(Character target) {
-        if (this.power >= this.specialCost) {
-            this.power -= this.specialCost;
-            target.setHealth(target.getHealth() - 40); // Special spell deals 40 damage
-            return this.name + " cast special spell successfully, dealing 40 damage!";
+    @Override
+    public String specialAttack(Character target) {
+        if (this.getPower() >= this.getSpecialCost()) {
+            this.setPower(this.getPower() - this.getSpecialCost());
+            target.setHealth(target.getHealth() - this.getSpecialDamage());
+            return this.getName() + " cast special spell successfully, dealing " + this.getSpecialDamage() + " damage!";
         } else {
-            return this.name + " not enough power to cast the spell.";
+            return this.getName() + " not enough power to cast the spell.";
+        }
+    }
+
+    @Override
+    public String attack(Character target) {
+        if (this.getPower() >= this.getStdAttackPowerCost()) {
+            this.setPower(this.getPower() - this.getStdAttackPowerCost());
+            target.setHealth(target.getHealth() - this.getStdAttackDamage());
+            return "";
+        } else {
+            return this.getName() + " does not have enough power to attack!";
         }
     }
 }

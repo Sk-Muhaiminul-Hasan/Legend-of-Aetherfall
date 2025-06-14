@@ -1,11 +1,10 @@
 public class Character {
-
-    protected int health;
-    protected int power;
-    protected int stdAttackDamage;
-    protected int stdAttackPowerCost;
-    protected int specialCost;
-    protected String name;
+    private int health;
+    private int power;
+    private int stdAttackDamage;
+    private int stdAttackPowerCost;
+    private int specialCost;
+    private int specialDamage;
 
     public int getHealth() {
         return health;
@@ -27,41 +26,54 @@ public class Character {
         return specialCost;
     }
 
-    public String getName() {
-        return this.name;
+    public int getSpecialDamage() {
+        return specialDamage;
     }
 
-    public void setHealth(int newHealth) {
+    protected void setHealth(int newHealth) {
         this.health = newHealth;
     }
 
-    public void setPower(int powerCost) {
-        this.power -= powerCost;
+    protected void setPower(int newPower) {
+        this.power = newPower;
     }
 
-    public void setStdAttackDamage(int newStdAttackDamage) {
+    protected void setStdAttackDamage(int newStdAttackDamage) {
         this.stdAttackDamage = newStdAttackDamage;
     }
 
-    public void setStdAttackPowerCost(int newStdAttackPowerCost) {
+    protected void setStdAttackPowerCost(int newStdAttackPowerCost) {
         this.stdAttackPowerCost = newStdAttackPowerCost;
     }
 
-    public void setSpecialCost(int newSpecialCost) {
+    protected void setSpecialCost(int newSpecialCost) {
         this.specialCost = newSpecialCost;
     }
 
-    public void setName(String newName) {
-        this.name = newName;
+    public void takeDamage(int damage) {
+        this.setHealth(this.getHealth() - damage);
     }
-
+    
+    public void setSpecialDamage(int newSpecialDamage) {
+        this.specialDamage = newSpecialDamage;
+    }
+    
     public String attack(Character target) {
         if (this.power >= this.stdAttackPowerCost) {
             this.power -= this.stdAttackPowerCost;
-            target.setHealth(target.getHealth() - this.stdAttackDamage);
-            return this.name + " attacks for " + this.stdAttackDamage + " damage!";
+            target.takeDamage(this.stdAttackDamage);
+            return "";
         } else {
-            return this.name + " does not have enough power to attack!";
+            return this.getClass().getSimpleName() + " does not have enough power to attack!";
+        }
+    }
+
+    public String specialAttack(Character target) {
+        if (this.power >= this.specialCost) {
+            this.power -= this.specialCost;
+            return this.getClass().getSimpleName() + " performs a special attack!";
+        } else {
+            return this.getClass().getSimpleName() + " does not have enough power for a special attack!";
         }
     }
 }

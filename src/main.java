@@ -1,37 +1,47 @@
 import java.util.Scanner;
 
 public class main {
+    public static void displayStats(Protagonist player, Character enemy) {
+        System.out.println("\n------Game Stats------");
+        System.out.println(player.getName() + " Health: " + player.getHealth() + ", Power: " + player.getPower());
+        System.out.println(enemy.getClass().getSimpleName() + " Health: " + enemy.getHealth() + ", Power: " + enemy.getPower());
+    }
     public static void main(String[] args) {
+        
         Scanner scanner = new Scanner(System.in);
         Protagonist player = null;
         Character enemy = null;
 
         // Character Selection
         System.out.println("Choose your character: 1. Mage 2. Archer 3. Warrior");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        System.out.print("> ");
+        int playerChoice = scanner.nextInt();
+        scanner.nextLine(); 
 
-        switch (choice) {
+        switch (playerChoice) {
             case 1:
                 System.out.println("You have chosen Mage.");
                 System.out.println("Enter your mage name:");
-                String mageName = scanner.nextLine();
+                System.out.print("> ");
+                String playerName = scanner.nextLine();
                 player = new Mage();
-                player.setName(mageName);
+                player.setName(playerName);
                 break;
             case 2:
                 System.out.println("You have chosen Archer.");
                 System.out.println("Enter your archer name:");
-                String archerName = scanner.nextLine();
+                System.out.print("> ");
+                playerName = scanner.nextLine();
                 player = new Archer();
-                player.setName(archerName);
+                player.setName(playerName);
                 break;
             case 3:
                 System.out.println("You have chosen Warrior.");
                 System.out.println("Enter your warrior name:");
-                String warriorName = scanner.nextLine();
+                System.out.print("> ");
+                playerName = scanner.nextLine();
                 player = new Warrior();
-                player.setName(warriorName);
+                player.setName(playerName);
                 break;
             default:
                 System.out.println("Invalid choice. Please select 1, 2, or 3.");
@@ -41,10 +51,11 @@ public class main {
         // Enemy Selection
         System.out.println("Choose your enemy:");
         System.out.println("1. DarkOverlord");
-        System.out.println("2. RegionalWarlord");
-        System.out.println("3. CorruptedMortal");
+        System.out.println("2. Regional Warlord");
+        System.out.println("3. Corrupted Mortal");
+        System.out.print("> ");
         int enemyChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine(); 
 
         switch (enemyChoice) {
             case 1:
@@ -57,7 +68,7 @@ public class main {
                 enemy = new CorruptedMortal();
                 break;
             default:
-                System.out.println("Invalid choice. Please select 1, 2, or 3.");
+                System.out.println("Invalid choice. Select 1, 2, or 3.");
                 return;
         }
 
@@ -66,32 +77,33 @@ public class main {
         System.out.println("Battle Start!");
 
         while (player.getHealth() > 0 && enemy.getHealth() > 0) {
+            
+            if (enemy instanceof DarkOverlord && ((DarkOverlord) enemy).isTargetWeakened()) {
+                ((DarkOverlord) enemy).resetWeakened(player);
+            }
+
+            if( player instanceof Warrior && ((Warrior) player).warriorsShield(enemy)) {
+                System.out.println("\n" + player.getName() + " has activated Warriors Shield!");
+                System.out.println(player.getName() + " will take no damage from normal attack!");
+                enemy.setStdAttackDamage(0);
+            }
             System.out.println("\nChoose your action: Attack or Special Attack");
             System.out.print(">");
-            String actionChoice = scanner.nextLine().toLowerCase();
+            String playerAction = scanner.nextLine().toLowerCase();
 
             // Player's turn
-            if (actionChoice.equals("attack")) {
-                int playerDamage = player.getStdAttackDamage();
-                if (enemy instanceof DarkOverlord && ((DarkOverlord) enemy).isTargetWeakened()) {
-                    playerDamage = playerDamage / 2;
-                    ((DarkOverlord) enemy).resetWeakened();
-                }
-                
+            if (playerAction.equals("attack")) {
                 System.out.println("\n" + player.getName() + " used Attack on " + enemy.getClass().getSimpleName());
-                System.out.println(player.getName() + " caused " + playerDamage + " damage");
-                String attackResult = player.attack(enemy);
-                if (attackResult.contains("not have enough power")) {
-                    System.out.println(attackResult);
+                System.out.println(player.getName() + " caused " + player.getStdAttackDamage() + " damage");
+                String playerAttackResult = player.attack(enemy);
+                if (playerAttackResult.contains("not have enough power")) {
+                    System.out.println(playerAttackResult);
                     continue;
                 }
-                System.out.println(attackResult);
                 
-                // Display stats after player's attack
-                System.out.println("\n------Game Stats------");
-                System.out.println(player.getName() + " Health: " + player.getHealth() + ", Power: " + player.getPower());
-                System.out.println(enemy.getClass().getSimpleName() + " Health: " + enemy.getHealth() + ", Power: " + enemy.getPower());
-
+                
+                
+                displayStats(player, enemy);
                 // Enemy's turn
                 if (enemy.getHealth() > 0) {
                     System.out.println("\n" + enemy.getClass().getSimpleName() + " used Attack on " + player.getName());
@@ -102,81 +114,47 @@ public class main {
                     } else {
                         System.out.println(enemyAttackResult);
                     }
-                    
-                    // Display stats after enemy's attack
-                    System.out.println("\n------Game Stats------");
-                    System.out.println(player.getName() + " Health: " + player.getHealth() + ", Power: " + player.getPower());
-                    System.out.println(enemy.getClass().getSimpleName() + " Health: " + enemy.getHealth() + ", Power: " + enemy.getPower());
+
+                    displayStats(player, enemy);
                 }
-            } else if (actionChoice.equals("special attack")) {
+            } else if (playerAction.equals("special attack") || playerAction.equals("special")) {
                 // Player's special attack
-                if (player instanceof Mage) {
-                    System.out.println("\n" + player.getName() + " used Special Attack on " + enemy.getClass().getSimpleName());
-                    System.out.println(((Mage) player).castSpell(enemy));
-                } else if (player instanceof Archer) {
-                    System.out.println("\nChoose your special ability:");
-                    System.out.println("1. Quick Shot (25 power, 30 damage)");
-                    System.out.println("2. Multi Shot (50 power, 60 damage)");
+                if (player instanceof Archer) {
+                    ((Archer) player).giveChoice();
                     String archerChoice = scanner.nextLine().toLowerCase();
-                    
-                    if (archerChoice.equals("1") || archerChoice.equals("quick shot")) {
-                        int damage = 30;
-                        if (enemy instanceof DarkOverlord && ((DarkOverlord) enemy).isTargetWeakened()) {
-                            damage = damage / 2;
-                            ((DarkOverlord) enemy).resetWeakened();
-                        }
-                        System.out.println("\n" + player.getName() + " used Quick Shot on " + enemy.getClass().getSimpleName());
-                        System.out.println(((Archer) player).quickShot(enemy, damage));
-                    } else if (archerChoice.equals("2") || archerChoice.equals("multi shot")) {
-                        int damage = 60;
-                        if (enemy instanceof DarkOverlord && ((DarkOverlord) enemy).isTargetWeakened()) {
-                            damage = damage / 2;
-                            ((DarkOverlord) enemy).resetWeakened();
-                        }
-                        System.out.println("\n" + player.getName() + " used Multi Shot on " + enemy.getClass().getSimpleName());
-                        System.out.println(((Archer) player).multiShot(enemy, damage));
-                    } else {
-                        System.out.println("Invalid choice. Please choose 1 or 2.");
-                        continue;
-                    }
-                } else if (player instanceof Warrior) {
-                    int damage = 35;
-                    if (enemy instanceof DarkOverlord && ((DarkOverlord) enemy).isTargetWeakened()) {
-                        damage = damage / 2;
-                        ((DarkOverlord) enemy).resetWeakened();
-                    }
-                    System.out.println("\n" + player.getName() + " used Special Attack on " + enemy.getClass().getSimpleName());
-                    System.out.println(((Warrior) player).mightyStrike(enemy, damage));
+                    ((Archer) player).getChoice(archerChoice);
                 }
                 
-                // Display stats after player's special attack
-                System.out.println("\n------Game Stats------");
-                System.out.println(player.getName() + " Health: " + player.getHealth() + ", Power: " + player.getPower());
-                System.out.println(enemy.getClass().getSimpleName() + " Health: " + enemy.getHealth() + ", Power: " + enemy.getPower());
+                System.out.println("\n" + player.getName() + " used Special Attack on " + enemy.getClass().getSimpleName());
+                String playerSpecialResult = player.specialAttack(enemy);
+                if (playerSpecialResult.contains("not have enough power")) {
+                    System.out.println(playerSpecialResult);
+                    continue;
+                }
+                System.out.println(playerSpecialResult);
+                
+                displayStats(player, enemy);
                 
                 // Enemy's turn
                 if (enemy.getHealth() > 0) {
-                    if (enemy instanceof DarkOverlord) {
-                        System.out.println("\n" + enemy.getClass().getSimpleName() + " used Special Attack on " + player.getName());
-                        System.out.println(((DarkOverlord) enemy).summonDarkness(player));
-                    } else if (enemy instanceof RegionalWarlord) {
-                        System.out.println("\n" + enemy.getClass().getSimpleName() + " used Special Attack on " + player.getName());
-                        System.out.println(((RegionalWarlord) enemy).warlordStrike(player));
-                        // RegionalWarlord gets a follow-up attack
-                        if (player.getHealth() > 0) {
-                            System.out.println("\n" + enemy.getClass().getSimpleName() + " used Attack on " + player.getName());
-                            System.out.println(enemy.getClass().getSimpleName() + " caused " + enemy.getStdAttackDamage() + " damage");
-                            System.out.println(enemy.attack(player));
-                        }
-                    } else if (enemy instanceof CorruptedMortal) {
-                        System.out.println("\n" + enemy.getClass().getSimpleName() + " used Special Attack on " + player.getName());
-                        System.out.println(((CorruptedMortal) enemy).corruptStrike(player));
+                    System.out.println("\n" + enemy.getClass().getSimpleName() + " used Special Attack on " + player.getName());
+                    String enemySpecialResult = enemy.specialAttack(player);
+                    if (enemySpecialResult.contains("not have enough power")) {
+                        System.out.println(enemySpecialResult);
+                        
+                    } else {
+                        System.out.println(enemySpecialResult);
+                        displayStats(player, enemy);
                     }
                     
-                    // Display stats after enemy's special attack
-                    System.out.println("\n------Game Stats------");
-                    System.out.println(player.getName() + " Health: " + player.getHealth() + ", Power: " + player.getPower());
-                    System.out.println(enemy.getClass().getSimpleName() + " Health: " + enemy.getHealth() + ", Power: " + enemy.getPower());
+                    // RegionalWarlord gets a follow-up attack
+                    if (enemy instanceof RegionalWarlord && player.getHealth() > 0 && enemy.getPower() >= enemy.getStdAttackPowerCost()) {
+                        System.out.println("\n" + enemy.getClass().getSimpleName() + " used Attack on " + player.getName());
+                        System.out.println(enemy.getClass().getSimpleName() + " caused " + enemy.getStdAttackDamage() + " damage");
+                        System.out.println(enemy.attack(player));
+                    }
+                    
+                    displayStats(player, enemy);
                 }
             } else {
                 System.out.println("Invalid action. Please choose 'Attack' or 'Special Attack'.");
@@ -188,19 +166,16 @@ public class main {
                 System.out.println("\n" + player.getName() + " is stunned and cannot move!");
                 ((RegionalWarlord) enemy).resetStun();
                 
-                // Display stats after stun
-                System.out.println("\n------Game Stats------");
-                System.out.println(player.getName() + " Health: " + player.getHealth() + ", Power: " + player.getPower());
-                System.out.println(enemy.getClass().getSimpleName() + " Health: " + enemy.getHealth() + ", Power: " + enemy.getPower());
+               displayStats(player, enemy);
             }
         }
 
         // Battle result
         if (player.getHealth() <= 0) {
-            System.out.println("\nBattle Over!");
+            System.out.println("\n--------Results--------");
             System.out.println(player.getName() + " has been defeated by " + enemy.getClass().getSimpleName() + "!");
         } else {
-            System.out.println("\nBattle Over!");
+            System.out.println("\n--------Results--------");
             System.out.println(enemy.getClass().getSimpleName() + " has been defeated by " + player.getName() + "!");
         }
 
