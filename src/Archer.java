@@ -20,7 +20,7 @@ public class Archer extends Protagonist {
 
     public void getChoice(String archerChoice) {
         
-                    //String archerChoice = scanner.nextLine().toLowerCase();
+                    
                     
                     if (archerChoice.equals("1") || archerChoice.equals("quick shot")) {
                         this.setMultiShot(false);
